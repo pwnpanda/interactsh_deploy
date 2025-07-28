@@ -1,0 +1,29 @@
+services:
+  interactsh-server:
+    image: projectdiscovery/interactsh-server:latest
+    container_name: interactsh-server
+    ports:
+      - "8080:80"
+      - "8443:443"
+      - "53:53/udp"
+    volumes:
+      - ./certs:/certs:ro
+    command: >
+      -domain h4x.fun
+      -privkey /certs/privkey.pem
+      -cert /certs/fullchain.pem
+      -root-tld public
+      -t knYKLNdaklmds72980ashhdg
+    restart: unless-stopped
+
+  interactsh-web:
+    image: projectdiscovery/interactsh-web:latest
+    container_name: interactsh-web
+    depends_on:
+      - interactsh-server
+    environment:
+      - API_SERVER=https://h4x.fun:8443
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+
