@@ -1,0 +1,3 @@
+[submodule "interactsh-web"]
+	path = interactsh-web
+	url = git@github.com:projectdiscovery/interactsh-web.git
