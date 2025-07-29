@@ -18,7 +18,7 @@ services:
     build:
       context: ./interactsh-web
       dockerfile: Dockerfile
-    container_name: interactsh-web
+    container_name: interactsh-web-custom
     depends_on:
       - interactsh-server
     environment:
