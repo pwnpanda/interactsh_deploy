@@ -5,19 +5,65 @@ command_exists() {
     command -v "$1" >/dev/null 2>&1
 }
 
-# Check for required commands
-echo "Checking for required commands..."
+# Function to install a package if it's not already installed
+install_if_missing() {
+    local package_name=$1
+    if ! command_exists "$package_name"; then
+        echo "$package_name is not installed. Installing..."
+        sudo apt-get update
+        sudo apt-get install -y "$package_name"
+    else
+        echo "$package_name is already installed."
+    fi
+}
 
-REQUIRED_COMMANDS=("jq" "npm" "node" "git" "docker-compose")
+# Install Go if not present
+if ! command_exists "go"; then
+    echo "Go is not installed. Installing..."
+    sudo apt-get update
+    sudo apt-get install -y golang
+else
+    echo "Go is already installed."
+fi
+
+# Install asdf using Go
+if ! command_exists "asdf"; then
+    echo "asdf is not installed. Installing using Go..."
+    go install github.com/asdf-vm/asdf.git@latest
+    echo 'PATH="$HOME/.asdf/shims:$PATH"' >> ~/.zshrc
+    source ~/.zshrc
+else
+    echo "asdf is already installed."
+fi
+
+# Install Node.js using asdf
+if ! command_exists "node"; then
+    echo "Node.js is not installed. Installing using asdf..."
+    asdf plugin-add nodejs https://github.com/asdf-vm/asdf-nodejs.git
+    asdf install nodejs latest
+    asdf global nodejs latest
+else
+    echo "Node.js is already installed."
+fi
+
+# Check for other required commands and install if missing
+echo "Checking for other required commands..."
+
+REQUIRED_COMMANDS=("jq" "git" "docker-compose")
 
 for cmd in "${REQUIRED_COMMANDS[@]}"; do
-    if command_exists "$cmd"; then
-        echo "$cmd is installed."
-    else
-        echo "Error: $cmd is not installed. Please install it before running this script."
-        exit 1
-    fi
+    install_if_missing "$cmd"
 done
+
+# Check for other required commands and install if missing
+echo "Checking for other required commands..."
+
+REQUIRED_COMMANDS=("jq" "git" "docker-compose")
+
+for cmd in "${REQUIRED_COMMANDS[@]}"; do
+    install_if_missing "$cmd"
+done
+
 # Step 1: Pull the latest changes from the main repo and submodules
 echo "Pulling latest changes from the main repository and submodules..."
 git pull origin master
