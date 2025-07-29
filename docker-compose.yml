@@ -5,12 +5,17 @@ services:
     ports:
       - "8080:80"
       - "8443:443"
+      - "8053:53"
+      - "389:389"
+      - "587:587"
     volumes:
       - ./certs:/certs:ro
     command: >
       -domain h4x.fun
       -privkey /certs/privkey.pem
       -cert /certs/fullchain.pem
+      -cidl 3
+      -cidn 3
       -t knYKLNdaklmds72980ashhdg
     restart: unless-stopped
 
