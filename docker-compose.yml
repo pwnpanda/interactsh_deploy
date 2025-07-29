@@ -14,16 +14,3 @@ services:
       -t knYKLNdaklmds72980ashhdg
     restart: unless-stopped
 
-  interactsh-web:
-    build:
-      context: ./interactsh-web
-      dockerfile: Dockerfile
-    container_name: interactsh-web-custom
-    depends_on:
-      - interactsh-server
-    environment:
-      - API_SERVER=https://h4x.fun:8443
-    ports:
-      - "3000:3000"
-    restart: unless-stopped
-
