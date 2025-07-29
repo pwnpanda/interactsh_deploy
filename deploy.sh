@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export PATH="$HOME/.asdf/shims:$PATH"
+
 # Function to check if a command exists
 command_exists() {
     command -v "$1" >/dev/null 2>&1
@@ -30,7 +32,7 @@ fi
 if ! command_exists "asdf"; then
     echo "asdf is not installed. Installing using Go..."
     go install github.com/asdf-vm/asdf.git@latest
-    export PATH="$HOME/.asdf/shims:$PATH"
+    #export PATH="$HOME/.asdf/shims:$PATH"
 else
     echo "asdf is already installed."
 fi
