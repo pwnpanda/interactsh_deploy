@@ -17,7 +17,9 @@ services:
     restart: unless-stopped
 
   interactsh-web:
-    image: projectdiscovery/interactsh-web:latest
+    build:
+      context: ./interactsh-web
+      dockerfile: Dockerfile
     container_name: interactsh-web
     depends_on:
       - interactsh-server
